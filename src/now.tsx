@@ -9,6 +9,8 @@ import { sortBy } from 'lodash';
 import TaskDetail from './components/TaskDetail';
 import TaskCommentForm from "./components/TaskCommentForm";
 import { formatDistanceToNowStrict } from 'date-fns';
+import TaskActions from './components/TaskActions';
+import useAnimatedText from './hooks/useAnimatedText';
 
 export default function Now() {
   const { data: tasks, error: getTasksError } = useSWR(SWRKeys.tasks, () =>
@@ -79,6 +81,8 @@ export default function Now() {
     return `> \`${formatDistanceToNowStrict(new Date(comment.posted))} ago\`  \n${formatContentToBlockquoteMrkD(comment.content)}`;
   }).join('\n\n');
 
+  const animatedContent = useAnimatedText(content);
+
   return <Detail
     isLoading={isLoading}
     navigationTitle="Your task to do right now!"
@@ -128,6 +132,9 @@ export default function Now() {
               <Action.Push title="Show Details" target={<TaskDetail task={headTask} />} icon={Icon.Sidebar} />
               <Action.Push title="Add New Comment" icon={Icon.Plus} target={<TaskCommentForm task={headTask} />} />
             </ActionPanel.Section>
+            <TaskActions
+              task={headTask}
+            />
           </>
         : null}
       </ActionPanel>
@@ -136,13 +143,13 @@ export default function Now() {
 ${isLoading ? 'Loading...' :
 `
 ${pinnedProject ? `
-${content}
+${animatedContent}
 
 ${commentsContent ? '### 💬 Comments' : ''}
 
 ${commentsContent}
 
-![](https://res.cloudinary.com/sonchu/image/upload/a_hflip,c_pad,h_327,w_400,x_0/v1652785965/looney-head-2_rfri64.png)
+![](${headTask ? 'https://res.cloudinary.com/sonchu/image/upload/a_hflip,c_pad,h_327,w_400,x_0/v1652785965/looney-head-2_rfri64.png' : 'https://res.cloudinary.com/sonchu/image/upload/c_scale,h_311/v1652896312/looney-dubbing-teenage-guy_vvwkor.png'})
 
 ---
 ` : `
