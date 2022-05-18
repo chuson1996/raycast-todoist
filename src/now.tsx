@@ -46,7 +46,7 @@ export default function Now() {
     })
     .map((project) => {
       // find tasks that have projectId = project.id
-      const _tasks = tasks?.filter((task) => task.projectId === project.id && task.priority === 4) || [];
+      const _tasks = tasks?.filter((task) => task.projectId === project.id) || [];
       const task = _tasks[0];
       return {task, project};
     });
