@@ -147,13 +147,14 @@ ${isLoading ? 'Loading...' :
 ${pinnedProject ? `
 ${animatedContent}
 
-${commentsContent ? '### 💬 Comments' : ''}
+
+---
+${commentsContent ? '　![](https://res.cloudinary.com/sonchu/image/upload/c_scale,w_45/v1652960181/conifer-114_ezbaip.png)' : ''}
 
 ${commentsContent}
 
 ![](${headTask ? 'https://res.cloudinary.com/sonchu/image/upload/a_hflip,c_pad,h_327,w_400,x_0/v1652785965/looney-head-2_rfri64.png' : 'https://res.cloudinary.com/sonchu/image/upload/c_scale,h_311/v1652896312/looney-dubbing-teenage-guy_vvwkor.png'})
 
----
 ` : `
 ## You need to pin a project! 👀
 
