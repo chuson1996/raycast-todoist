@@ -67,7 +67,7 @@ export default function Now() {
   }
 
   const formatContentToBlockquoteMrkD = (text: string) => {
-    return text.split('\n').map(line => `>${line ? ` ${line.trim()}` : '　'}`).join('  \n')
+    return text.split('\n').map(line => `${line ? ` ${line.trim()}` : '　'}`).join('  \n')
   }
   const formatContentToParagraphMrkD = (text: string) => {
     return text.split('\n').map(line => `${line}  `).join('\n')
@@ -78,8 +78,10 @@ export default function Now() {
   const content = headTask ? `# ${headTask.content}\n\n${formatContentToParagraphMrkD(headTask.description)}` : `# Let's move on to the next task!`
 
   const commentsContent = (comments || [])?.map((comment) => {
-    return `> \`${formatDistanceToNowStrict(new Date(comment.posted))} ago\`  \n${formatContentToBlockquoteMrkD(comment.content)}`;
+    return `\`${formatDistanceToNowStrict(new Date(comment.posted))} ago\` \n \`\`\`\n${formatContentToBlockquoteMrkD(comment.content)}\n\`\`\``;
   }).join('\n\n');
+
+  // console.log(commentsContent);
 
   const animatedContent = useAnimatedText(content);
 
