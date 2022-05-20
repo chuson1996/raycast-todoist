@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Icon, LocalStorage } from "@raycast/api";
+import { getPreferenceValues, Icon, LocalStorage } from "@raycast/api";
 
 import { Action, ActionPanel, Detail } from "@raycast/api";
 import useSWR from 'swr';
@@ -8,9 +8,12 @@ import { SWRKeys } from './types';
 import { sortBy } from 'lodash';
 import TaskDetail from './components/TaskDetail';
 import TaskCommentForm from "./components/TaskCommentForm";
-import { formatDistanceToNowStrict } from 'date-fns';
+import { formatDistanceToNowStrict, formatISO, startOfDay } from 'date-fns';
 import TaskActions from './components/TaskActions';
 import useAnimatedText from './hooks/useAnimatedText';
+import axios from 'axios';
+
+const preferences = getPreferenceValues();
 
 export default function Now() {
   const { data: tasks, error: getTasksError } = useSWR(SWRKeys.tasks, () =>
@@ -19,6 +22,12 @@ export default function Now() {
   );
   const { data: projects, error: getProjectsError } = useSWR(SWRKeys.projects, () => todoist.getProjects());
   const [pinnedProject, setPinnedProject] = useState(0);
+
+  const { data: completedTasks } = useSWR('completedTasks', () => axios.get(`https://api.todoist.com/sync/v8/completed/get_all?since=${formatISO(startOfDay(new Date()))}`, {
+    headers: {
+      Authorization: `Bearer ${preferences.token}`
+    }
+  }).then(({ data }) => data.items))
 
 
   useEffect(() => {
@@ -83,6 +92,8 @@ export default function Now() {
 
   // console.log(commentsContent);
 
+  const tasksStatus = `${Array((completedTasks || []).length).fill('■').join('')}▣${Array(Math.max(tasks?.length || 1, 1) - 1).fill('□').join('')}`
+
   const animatedContent = useAnimatedText(content);
 
   return <Detail
@@ -98,9 +109,10 @@ export default function Now() {
         />
         {tasks ?
           <Detail.Metadata.Label
-            title=""
-            text={`${tasks.length - 1} more tasks left today`}
-            icon={Icon.Document}
+            title="Today's Progress"
+            // text={`${tasks.length - 1} more tasks left today`}
+            text={tasksStatus}
+            icon={Icon.LevelMeter}
           />
         : null}
       </Detail.Metadata>: null
