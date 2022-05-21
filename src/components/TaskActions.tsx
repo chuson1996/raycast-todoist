@@ -12,7 +12,8 @@ import TaskComments from "./TaskComments";
 const schedules = [
   { name: "Today", amount: 0 },
   { name: "Tomorrow", amount: 1 },
-  { name: "In two days", amount: 2 },
+  { name: "In 2 days", amount: 2 },
+  { name: "In 3 days", amount: 3 },
   { name: "In a week", amount: 7 },
 ];
 
