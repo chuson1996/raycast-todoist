@@ -60,6 +60,18 @@ export default function TaskActions({ task }: TaskActionsProps): JSX.Element {
     }
   }
 
+  async function moveOverdueTasksToToday() {
+    try {
+      await showToast({ style: Toast.Style.Animated, title: "Fetching task" });
+      const tasks = await todoist.getTasks({ filter: "overdue" });
+      await showToast({ style: Toast.Style.Animated, title: "Moving overdue tasks to today" });
+      await Promise.all(tasks.map(task => updateTask(task, { dueDate: getAPIDate(addDays(getToday(), 0))})))
+      await showToast({ style: Toast.Style.Success, title: "Done!" });
+    } catch (error) {
+      handleError({ error, title: "Unable to move overdue tasks to today" });
+    }
+  }
+
   return (
     <>
       <ActionPanel.Section>
@@ -113,6 +125,13 @@ export default function TaskActions({ task }: TaskActionsProps): JSX.Element {
           icon={Icon.Trash}
           shortcut={{ modifiers: ["ctrl"], key: "x" }}
           onAction={() => deleteTask(task)}
+        />
+
+        <Action
+          id="moveOverdueToToday"
+          title="Move overdue tasks to today"
+          icon={Icon.Hammer}
+          onAction={moveOverdueTasksToToday}
         />
       </ActionPanel.Section>
 

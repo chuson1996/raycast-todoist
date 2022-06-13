@@ -63,15 +63,16 @@ export default function CreateTask() {
       return;
     }
 
+    
+    if (dueDate) {
+      body.dueDate = getAPIDate(dueDate);
+    }
+    
     if (!body.dueDate) {
       await showToast({ style: Toast.Style.Failure, title: "The due date is required" });
       return;
     }
-
-    if (dueDate) {
-      body.dueDate = getAPIDate(dueDate);
-    }
-
+    
     if (priority) {
       body.priority = parseInt(priority);
     }
